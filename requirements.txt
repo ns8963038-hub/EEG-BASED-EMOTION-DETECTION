@@ -1,0 +1,8 @@
+# Core scientific stack for the DREAMER EEG emotion-recognition pipeline.
+# Version floors match what the project was developed and tested against
+# (Python 3.14). Newer releases should also work.
+numpy>=2.0
+scipy>=1.13
+scikit-learn>=1.4
+matplotlib>=3.8
+imbalanced-learn>=0.12

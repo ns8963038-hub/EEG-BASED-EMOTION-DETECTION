@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Dataset — DREAMER.mat is ~432 MB, far above GitHub's 100 MB file limit.
+# Download it separately (see README) and place it in data_preprocessed_python/.
+# ---------------------------------------------------------------------------
+data_preprocessed_python/
+*.mat
+
+# Cached features (regenerated on first run)
+results/features_cache.npz
+
+# Unrelated web-development coursework that lived in the same folder
+Web Development Projects/
+results image/
+runlog.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

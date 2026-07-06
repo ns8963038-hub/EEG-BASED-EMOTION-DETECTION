@@ -116,40 +116,101 @@ held-out fold.
 
 ---
 
-## Getting the dataset
+## Getting started — run it on your own machine
 
-`DREAMER.mat` (~432 MB) is **not** included in this repository (it exceeds
-GitHub's file-size limit and has its own license). Request/download it from the
-official source:
+Follow these steps in order. Anyone who clones the repo can reproduce every
+result on the table above.
 
-- DREAMER on Zenodo: <https://zenodo.org/record/546113>
+### Prerequisites
 
-Place the file at:
+- **Python 3.10 or newer** (developed and tested on 3.14) — check with
+  `python3 --version`
+- **git**
+- **~1 GB free disk** (the dataset is ~432 MB)
+- No GPU needed — it runs on any CPU in about 10 seconds once features are cached.
 
+### Step 1 — Clone the repository
+
+```bash
+git clone https://github.com/ns8963038-hub/EEG-BASED-EMOTION-DETECTION.git
+cd EEG-BASED-EMOTION-DETECTION
 ```
-data_preprocessed_python/DREAMER.mat
+
+### Step 2 — Download the DREAMER dataset (required)
+
+The dataset is **not** in this repo (it is ~432 MB — above GitHub's limit — and
+has its own license), so you download it once yourself:
+
+1. Open the official source: <https://zenodo.org/record/546113>
+2. Agree to the license and download **`DREAMER.mat`**.
+3. Put the file inside a `data_preprocessed_python/` folder so the final path is
+   exactly `data_preprocessed_python/DREAMER.mat`:
+
+```bash
+mkdir -p data_preprocessed_python
+mv ~/Downloads/DREAMER.mat data_preprocessed_python/   # adjust path as needed
 ```
 
 > Citation: S. Katsigiannis and N. Ramzan, "DREAMER: A Database for Emotion
 > Recognition Through EEG and ECG Signals from Wireless Low-cost Off-the-Shelf
 > Devices," *IEEE Journal of Biomedical and Health Informatics*, 2018.
 
-## How to run
+### Step 3 — Create and activate a virtual environment
 
+**macOS / Linux:**
 ```bash
-# 1. Create an environment (Python 3.10+; developed on 3.14)
 python3 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Run the full pipeline
-python main.py                     # reuses cached features if present
-python main.py --no-cache          # recompute features from the .mat file
+source .venv/bin/activate
 ```
 
-Outputs (metrics table + figures) are written to `results/`.
+**Windows (PowerShell):**
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+Your prompt should now start with `(.venv)`.
+
+### Step 4 — Install the dependencies
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### Step 5 — Run the project
+
+```bash
+python main.py
+```
+
+The **first** run reads the `.mat` file and extracts features (~1–2 minutes,
+mostly loading the 432 MB file), then caches them. **Later** runs reuse the cache
+and finish in ~10 seconds. To force a fresh feature extraction:
+
+```bash
+python main.py --no-cache
+```
+
+### Step 6 — View the results
+
+Everything is written to the **`results/`** folder, and a summary table is also
+printed in the terminal:
+
+- `metrics.csv` — accuracy / F1 / ROC-AUC for every model and scheme
+- `model_comparison.png` — accuracy of all four models across the three dimensions
+- `confusion_valence.png`, `confusion_arousal.png`, `confusion_dominance.png`
+- `feature_importance_*.png` — the channels/bands the model relied on
+- `label_distribution.png` — class balance across the 414 trials
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `FileNotFoundError: ...DREAMER.mat` | The dataset isn't in `data_preprocessed_python/`. Recheck Step 2 — the filename must be exactly `DREAMER.mat`. |
+| `ModuleNotFoundError` | The virtual environment isn't active, or Step 4 didn't finish. Re-activate it and re-run `pip install -r requirements.txt`. |
+| `python3: command not found` (Windows) | Use `py` instead of `python3`. |
+| No plot windows pop up | Intentional — figures are **saved** to `results/` instead of shown, so it works on any machine or server. Open the PNGs from there. |
 
 ---
 
